@@ -5,6 +5,7 @@ import com.technical.backend_technical_test.model.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductService {
@@ -17,8 +18,9 @@ public class ProductService {
 
     public List<Product> getSimilarProducts(String productId) {
         return productClient.getSimilarIds(productId)
-            .stream()
+            .parallelStream()
             .map(productClient::getProductDetail)
+            .filter(Objects::nonNull)
             .toList();
     }
 }
