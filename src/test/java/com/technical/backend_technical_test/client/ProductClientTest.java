@@ -23,7 +23,8 @@ class ProductClientTest {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
         productClient = new ProductClient(
-            WebClient.builder().baseUrl(mockWebServer.url("/").toString())
+            WebClient.builder(),
+            mockWebServer.url("/").toString()
         );
     }
 

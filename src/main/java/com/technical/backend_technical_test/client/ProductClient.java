@@ -1,21 +1,23 @@
 package com.technical.backend_technical_test.client;
 
 import com.technical.backend_technical_test.model.Product;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
 public class ProductClient {
 
     private final WebClient webClient;
-    private static final String BASE_URL = "http://localhost:3001";
 
-    public ProductClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(BASE_URL).build();
+    public ProductClient(
+        WebClient.Builder webClientBuilder,
+        @Value("${mock.base-url}") String baseUrl
+    ) {
+        this.webClient = webClientBuilder.baseUrl(baseUrl).build();
     }
 
     public Mono<List<Integer>> getSimilarIdsMono(String productId) {
