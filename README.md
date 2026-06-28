@@ -24,8 +24,17 @@ mvn test               # Run tests
 ## Tech stack
 
 - Java 17
-- Spring Boot 3
+- Spring Boot 3.4.5
 - Maven
+
+## How it works
+
+Given a product ID, the app:
+1. Calls the existing API to get the similar product IDs
+2. Fetches the details of each similar product in parallel
+3. Returns the list of similar products with full details
+
+The app handles errors gracefully. If a product detail is not found, it is excluded from the response instead of failing the whole request.
 
 ## API
 
@@ -35,7 +44,15 @@ Exposes the following endpoint:
 
 Returns a list of similar products with their full details.
 
+## External dependencies
+
+This app requires the mock server running on port 3001.
+To start it, clone [backendDevTest](https://github.com/dalogax/backendDevTest) and run:
+
+```bash
+docker-compose up -d simulado
+```
+
 ## Author
 
-Patricia Mato Miragaya - patriciamato10@gmail.com
-
+Patricia Mato Miragaya
