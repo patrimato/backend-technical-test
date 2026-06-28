@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: backend-technical-test
+
+server:
+  port: 5000
