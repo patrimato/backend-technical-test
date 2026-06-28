@@ -26,6 +26,7 @@ mvn test               # Run tests
 - Java 17
 - Spring Boot 3.4.5
 - Maven
+- WebFlux (WebClient)
 
 ## How it works
 
@@ -44,14 +45,34 @@ Exposes the following endpoint:
 
 Returns a list of similar products with their full details.
 
+## Performance
+
+Product details are fetched in parallel using reactive WebClient, which allows handling high concurrency efficiently. All 5 k6 load test scenarios pass successfully (normal, notFound, error, slow, verySlow).
+
+## Testing
+
+The project includes unit and integration tests covering the controller, service and client layers.
+
+```bash
+mvn test
+```
+
 ## External dependencies
 
-This app requires the mock server running on port 3001.
+This app requires the mock server running on port 3001 to serve product data.
 To start it, clone [backendDevTest](https://github.com/dalogax/backendDevTest) and run:
 
 ```bash
 docker-compose up -d simulado
 ```
+
+Once the mock server is running, start the application:
+
+```bash
+mvn spring-boot:run
+```
+
+The API will be available at `http://localhost:5000`.
 
 ## Author
 
