@@ -1,7 +1,7 @@
-package com.technical.backendtechnicaltest.service;
+package com.technical.backend_technical_test.service;
 
-import com.technical.backendtechnicaltest.client.ProductClient;
-import com.technical.backendtechnicaltest.model.Product;
+import com.technical.backend_technical_test.client.ProductClient;
+import com.technical.backend_technical_test.model.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package com.technical.backendtechnicaltest.client;
+package com.technical.backend_technical_test.client;
 
-import com.technical.backendtechnicaltest.model.Product;
+import com.technical.backend_technical_test.model.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 

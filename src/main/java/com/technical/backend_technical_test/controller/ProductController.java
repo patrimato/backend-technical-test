@@ -1,7 +1,7 @@
-package com.technical.backendtechnicaltest.controller;
+package com.technical.backend_technical_test.controller;
 
-import com.technical.backendtechnicaltest.model.Product;
-import com.technical.backendtechnicaltest.service.ProductService;
+import com.technical.backend_technical_test.model.Product;
+import com.technical.backend_technical_test.service.ProductService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
