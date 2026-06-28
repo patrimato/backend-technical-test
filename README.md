@@ -57,6 +57,15 @@ The project includes unit and integration tests covering the controller, service
 mvn test
 ```
 
+## Configuration
+
+The mock server URL can be configured in `src/main/resources/application.yaml`:
+
+```yaml
+mock:
+  base-url: http://localhost:3001
+```
+
 ## External dependencies
 
 This app requires the mock server running on port 3001 to serve product data.

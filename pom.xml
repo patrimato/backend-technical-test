@@ -11,21 +11,8 @@
 	<groupId>com.technical</groupId>
 	<artifactId>backend-technical-test</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<name>backend-technical-test</name>
+	<description>Spring Boot application that exposes an API to retrieve similar products</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
