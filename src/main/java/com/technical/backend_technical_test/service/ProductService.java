@@ -3,9 +3,10 @@ package com.technical.backend_technical_test.service;
 import com.technical.backend_technical_test.client.ProductClient;
 import com.technical.backend_technical_test.model.Product;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ProductService {
@@ -17,10 +18,11 @@ public class ProductService {
     }
 
     public List<Product> getSimilarProducts(String productId) {
-        return productClient.getSimilarIds(productId)
-            .parallelStream()
-            .map(productClient::getProductDetail)
-            .filter(Objects::nonNull)
-            .toList();
+        return productClient.getSimilarIdsMono(productId)
+            .flatMapMany(Flux::fromIterable)
+            .flatMap(id -> productClient.getProductDetailMono(id)
+                .onErrorResume(e -> Mono.empty()))
+            .collectList()
+            .block();
     }
 }

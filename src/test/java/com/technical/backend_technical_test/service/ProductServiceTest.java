@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -24,9 +25,9 @@ class ProductServiceTest {
 
     @Test
     void returnsSimilarProductsWithDetails() {
-        when(productClient.getSimilarIds("1")).thenReturn(List.of(2, 3));
-        when(productClient.getProductDetail(2)).thenReturn(new Product("2", "Dress", 19.99, true));
-        when(productClient.getProductDetail(3)).thenReturn(new Product("3", "Blazer", 29.99, false));
+        when(productClient.getSimilarIdsMono("1")).thenReturn(Mono.just(List.of(2, 3)));
+        when(productClient.getProductDetailMono(2)).thenReturn(Mono.just(new Product("2", "Dress", 19.99, true)));
+        when(productClient.getProductDetailMono(3)).thenReturn(Mono.just(new Product("3", "Blazer", 29.99, false)));
 
         List<Product> result = productService.getSimilarProducts("1");
 
@@ -36,9 +37,9 @@ class ProductServiceTest {
 
     @Test
     void ignoresNullProductsWhenDetailNotFound() {
-        when(productClient.getSimilarIds("1")).thenReturn(List.of(2, 999));
-        when(productClient.getProductDetail(2)).thenReturn(new Product("2", "Dress", 19.99, true));
-        when(productClient.getProductDetail(999)).thenReturn(null);
+        when(productClient.getSimilarIdsMono("1")).thenReturn(Mono.just(List.of(2, 999)));
+        when(productClient.getProductDetailMono(2)).thenReturn(Mono.just(new Product("2", "Dress", 19.99, true)));
+        when(productClient.getProductDetailMono(999)).thenReturn(Mono.empty());
 
         List<Product> result = productService.getSimilarProducts("1");
 
@@ -48,7 +49,7 @@ class ProductServiceTest {
 
     @Test
     void returnsEmptyListWhenNoSimilarIds() {
-        when(productClient.getSimilarIds("999")).thenReturn(List.of());
+        when(productClient.getSimilarIdsMono("999")).thenReturn(Mono.just(List.of()));
 
         List<Product> result = productService.getSimilarProducts("999");
 
