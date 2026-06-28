@@ -1,73 +1,74 @@
 package com.technical.backend_technical_test.client;
 
 import com.technical.backend_technical_test.model.Product;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class ProductClientTest {
 
-    @Mock
-    private RestTemplate restTemplate;
-
-    @InjectMocks
+    private MockWebServer mockWebServer;
     private ProductClient productClient;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+        productClient = new ProductClient(
+            WebClient.builder().baseUrl(mockWebServer.url("/").toString())
+        );
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        mockWebServer.shutdown();
+    }
 
     @Test
     void returnsSimilarIds() {
-        when(restTemplate.getForObject(
-            "http://localhost:3001/product/1/similarids",
-            Integer[].class
-        )).thenReturn(new Integer[]{2, 3, 4});
+        mockWebServer.enqueue(new MockResponse()
+            .setBody("[2, 3, 4]")
+            .addHeader("Content-Type", "application/json"));
 
-        List<Integer> ids = productClient.getSimilarIds("1");
+        List<Integer> ids = productClient.getSimilarIdsMono("1").block();
 
         assertThat(ids).containsExactly(2, 3, 4);
     }
 
     @Test
     void returnsEmptyListWhenSimilarIdsNotFound() {
-        when(restTemplate.getForObject(
-            "http://localhost:3001/product/999/similarids",
-            Integer[].class
-        )).thenThrow(HttpClientErrorException.NotFound.class);
+        mockWebServer.enqueue(new MockResponse().setResponseCode(404));
 
-        List<Integer> ids = productClient.getSimilarIds("999");
+        List<Integer> ids = productClient.getSimilarIdsMono("999").block();
 
         assertThat(ids).isEmpty();
     }
 
     @Test
     void returnsProductDetail() {
-        Product product = new Product("2", "Dress", 19.99, true);
-        when(restTemplate.getForObject(
-            "http://localhost:3001/product/2",
-            Product.class
-        )).thenReturn(product);
+        mockWebServer.enqueue(new MockResponse()
+            .setBody("{\"id\":\"2\",\"name\":\"Dress\",\"price\":19.99,\"availability\":true}")
+            .addHeader("Content-Type", "application/json"));
 
-        Product result = productClient.getProductDetail(2);
+        Product result = productClient.getProductDetailMono(2).block();
 
+        assertThat(result).isNotNull();
         assertThat(result.name()).isEqualTo("Dress");
     }
 
     @Test
     void returnsNullWhenProductNotFound() {
-        when(restTemplate.getForObject(
-            "http://localhost:3001/product/999",
-            Product.class
-        )).thenThrow(HttpClientErrorException.NotFound.class);
+        mockWebServer.enqueue(new MockResponse().setResponseCode(404));
 
-        Product result = productClient.getProductDetail(999);
+        Product result = productClient.getProductDetailMono(999).block();
 
         assertThat(result).isNull();
     }
