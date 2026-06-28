@@ -1,4 +1,4 @@
-package com.technical.backendtechnicaltest.model;
+package com.technical.backend_technical_test.model;
 
 public record Product(
     String id,

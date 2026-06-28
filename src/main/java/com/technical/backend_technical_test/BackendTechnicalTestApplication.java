@@ -1,4 +1,4 @@
-package com.technical.backendtechnicaltest;
+package com.technical.backend_technical_test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
